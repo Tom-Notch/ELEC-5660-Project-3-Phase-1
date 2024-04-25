@@ -8,6 +8,7 @@
 
 using namespace std;
 using namespace Eigen;
+
 ros::Publisher odom_pub;
 MatrixXd Q = MatrixXd::Identity(12, 12);
 MatrixXd Rt = MatrixXd::Identity(6, 6);
@@ -25,8 +26,8 @@ void odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
   //  camera position in the IMU frame = (0.05, 0.05, 0)
   //  camera orientation in the IMU frame = Quaternion(0, 1, 0, 0); w x y z, respectively
   //					   RotationMatrix << 1, 0, 0,
-  //							             0, -1, 0,
-  //                                        0, 0, -1;
+  //							                 0, -1, 0,
+  //                               0, 0, -1;
 }
 
 int main(int argc, char** argv)
