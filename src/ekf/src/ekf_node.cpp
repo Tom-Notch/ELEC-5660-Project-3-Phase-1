@@ -82,6 +82,11 @@ Quaterniond euler2Quaternion(const Vector3d& vEulerAngles)
   return AngleAxisd(vEulerAngles(0), Vector3d::UnitX()) * AngleAxisd(vEulerAngles(1), Vector3d::UnitY()) * AngleAxisd(vEulerAngles(2), Vector3d::UnitZ());
 }
 
+Matrix3d euler2RotationMatrix(const Vector3d& vEulerAngles)
+{
+  return AngleAxisd(vEulerAngles(0), Vector3d::UnitX()) * AngleAxisd(vEulerAngles(1), Vector3d::UnitY()) * AngleAxisd(vEulerAngles(2), Vector3d::UnitZ()).toRotationMatrix();
+}
+
 /**
  * @brief Generate Euler angles from Quaternion in XYZ order
  *
@@ -97,8 +102,8 @@ VectorXd predictFunction(const VectorXd& vXLast, const VectorXd& vU, const Vecto
 {
   VectorXd vX = vXLast;
 
-  vX.segment<3>(0) = vXLast.segment<3>(0) + vXLast.segment<3>(3) * dDt + 0.5 * (vU.segment<3>(0) - vXLast.segment<3>(9)) * dDt * dDt + vN.segment<3>(0);  // update position
-  vX.segment<3>(3) = vXLast.segment<3>(3) + (vU.segment<3>(0) - vXLast.segment<3>(9)) * dDt + vN.segment<3>(3);                                           // update linear velocity
+  vX.segment<3>(0) = vXLast.segment<3>(0) + vXLast.segment<3>(3) * dDt + 0.5 * euler2RotationMatrix(vXLast.segment<3>(6)).transpose() * (vU.segment<3>(0) - vXLast.segment<3>(9)) * dDt * dDt + vN.segment<3>(0);  // update position
+  vX.segment<3>(3) = vXLast.segment<3>(3) + euler2RotationMatrix(vXLast.segment<3>(6)).transpose() * (vU.segment<3>(0) - vXLast.segment<3>(9)) * dDt + vN.segment<3>(3);                                           // update linear velocity
 
   const Quaterniond& qLast = euler2Quaternion(vXLast.segment<3>(6));
   const Quaterniond& qImu = euler2Quaternion((vU.segment<3>(3) - vXLast.segment<3>(12)) * dDt);
