@@ -10,16 +10,30 @@ using namespace std;
 using namespace Eigen;
 
 ros::Publisher odom_pub;
+
+/**
+ * @brief [
+ *          p     position
+ *          p_dot linear velocity
+ *          q     row pitch yaw, rotation by x, y, z axis
+ *          b_g   gyroscope bias
+ *        ]
+ *
+ */
+VectorXd x(12);
+
 MatrixXd Q = MatrixXd::Identity(12, 12);
 MatrixXd Rt = MatrixXd::Identity(6, 6);
 
 void imu_callback(const sensor_msgs::Imu::ConstPtr& msg)
 {
   // your code for propagation
+  //  x, y, z, roll, pitch, yaw, x_dot, y_dot, z_dot, roll_dot, pitch_dot, yaw_dot
 }
 
 // Rotation from the camera frame to the IMU frame
 Eigen::Matrix3d Rcam;
+
 void odom_callback(const nav_msgs::Odometry::ConstPtr& msg)
 {
   // your code for update
