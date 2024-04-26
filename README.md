@@ -21,12 +21,6 @@
    ./scripts/run.sh
    ```
 
-   or
-
-   ```bash
-   docker compose up -d
-   ```
-
 1. Attach to the running container
 
    ```bash
